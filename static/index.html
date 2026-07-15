@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinemate AI</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#FF3366',
+                        secondary: '#FF9933',
+                        dark: '#030305',
+                        glass: 'rgba(15, 15, 20, 0.6)',
+                        glassBorder: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030305;
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Video Background */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+        #bg-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.35;
+            filter: contrast(1.2) saturate(1.2);
+        }
+        .fade-overlay {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 40vh;
+            z-index: 1;
+        }
+        .top-fade {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(3,3,5,1), transparent);
+        }
+        .bottom-fade {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(3,3,5,1), transparent);
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(15, 15, 20, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #FF3366 0%, #FF9933 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #030305; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,51,102,0.5); border-radius: 3px; }
+        
+        /* Card Hover Animations */
+        .movie-card {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .movie-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 51, 102, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255, 51, 102, 0.15);
+        }
+        .movie-card img {
+            transition: transform 0.5s ease;
+        }
+        .movie-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Skeleton Loader */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Background Video -->
+    <div class="video-container">
+        <video autoplay loop muted playsinline id="bg-video">
+            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260411_104032_69319010-2458-492b-b04d-b40a5dfa4482.mp4" type="video/mp4">
+        </video>
+        <div class="fade-overlay top-fade"></div>
+        <div class="fade-overlay bottom-fade"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full h-20 z-50 glass-panel border-b-0 border-x-0 border-t-0 border-b-glassBorder flex items-center justify-between px-6 lg:px-12">
+        <div class="font-display font-extrabold text-xl tracking-wider gradient-text">
+            CINEMATE AI
+        </div>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-glassBorder flex items-center justify-center cursor-pointer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-28 pb-20 min-h-screen flex flex-col items-center w-full px-4 relative z-10">
+        
+        <!-- Hero Section -->
+        <section id="hero" class="w-full max-w-4xl mx-auto text-center mt-12 lg:mt-20 transition-all duration-500">
+            <h1 class="font-display font-extrabold text-5xl md:text-6xl lg:text-7xl leading-tight mb-8">
+                Find Your Next <br/>
+                <span class="gradient-text">Cinematic Masterpiece</span>
+            </h1>
+            
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12">
+                Enter a movie you love, and let our AI curate the perfect match based on multidimensional collaborative filtering.
+            </p>
+
+            <div class="relative max-w-2xl mx-auto w-full flex flex-col gap-6">
+                <!-- Search Box -->
+                <div class="relative w-full">
+                    <input type="text" id="movie-input" placeholder="Type a movie name..." autocomplete="off" class="w-full glass-panel rounded-2xl py-5 px-6 text-xl text-white outline-none focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
+                    
+                    <!-- Dropdown -->
+                    <div id="dropdown" class="absolute top-[110%] left-0 w-full glass-panel rounded-2xl max-h-72 overflow-y-auto hidden z-50 text-left shadow-[0_20px_40px_rgba(0,0,0,0.8)] border border-glassBorder"></div>
+                </div>
+
+                <!-- Button -->
+                <button id="recommend-btn" disabled class="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold text-lg rounded-full py-4 uppercase tracking-wider shadow-[0_10px_20px_rgba(255,51,102,0.3)] hover:shadow-[0_15px_30px_rgba(255,51,102,0.5)] hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none flex items-center justify-center gap-2">
+                    Generate Matches
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <section id="loading-state" class="hidden flex flex-col items-center justify-center mt-20">
+            <div class="w-12 h-12 border-4 border-white/10 border-t-primary rounded-full animate-spin mb-4"></div>
+            <p class="text-gray-400 font-medium">Analyzing narrative vectors and genre affinities...</p>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results" class="hidden w-full max-w-5xl mx-auto mt-8 animate-[fadeIn_0.8s_forwards]">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
+                <h2 class="font-display font-bold text-3xl md:text-4xl">
+                    Because you liked <span id="source-title" class="gradient-text"></span>
+                </h2>
+                <button id="back-btn" class="glass-panel text-gray-300 px-6 py-3 rounded-full font-medium hover:text-white hover:bg-white/10 transition-colors w-fit">
+                    New Search
+                </button>
+            </div>
+
+            <div id="cards-container" class="flex flex-col gap-8 w-full">
+                <!-- Cards injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
